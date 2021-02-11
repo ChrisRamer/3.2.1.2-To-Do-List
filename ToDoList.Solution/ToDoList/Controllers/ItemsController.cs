@@ -13,8 +13,8 @@ namespace ToDoList.Controllers
 			return View(allItems);
 		}
 
-		[Route("/items/new")]
-		public ActionResult CreateForm()
+		[HttpGet("/items/new")]
+		public ActionResult New()
 		{
 			return View();
 		}
