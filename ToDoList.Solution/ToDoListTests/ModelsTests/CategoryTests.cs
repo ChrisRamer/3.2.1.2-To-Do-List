@@ -13,6 +13,7 @@ namespace ToDoListTests
 			Category.ClearAll();
 		}
 
+		/*
 		[TestMethod]
 		public void CategoryConstructor_CreatesInstanceOfCategory_Category()
 		{
@@ -98,5 +99,6 @@ namespace ToDoListTests
 			// Assert
 			CollectionAssert.AreEqual(newList, result);
 		}
+		*/
 	}
 }
