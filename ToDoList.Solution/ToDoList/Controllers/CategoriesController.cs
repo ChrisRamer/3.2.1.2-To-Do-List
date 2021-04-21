@@ -38,7 +38,7 @@ namespace ToDoList.Controllers
 		{
 			Category thisCategory = _db.Categories
 				.Include(category => category.Items)
-				.ThenInclude(join => join.Item)
+					.ThenInclude(join => join.Item)
 				.FirstOrDefault(category => category.CategoryId == id);
 			return View(thisCategory);
 		}
@@ -57,7 +57,6 @@ namespace ToDoList.Controllers
 			return RedirectToAction("Index");
 		}
 
-		/*
 		public ActionResult Delete(int id)
 		{
 			Category thisCategory = _db.Categories.FirstOrDefault(category => category.CategoryId == id);
@@ -72,6 +71,5 @@ namespace ToDoList.Controllers
 			_db.SaveChanges();
 			return RedirectToAction("Index");
 		}
-		*/
 	}
 }

@@ -7,7 +7,7 @@ using ToDoList.Models;
 
 namespace ToDoList.Controllers
 {
-	public class ItemsController :  Controller
+	public class ItemsController : Controller
 	{
 		private readonly ToDoListContext _db;
 
@@ -41,7 +41,10 @@ namespace ToDoList.Controllers
 
 		public ActionResult Details(int id)
 		{
-			Item thisItem = _db.Items.FirstOrDefault(item => item.ItemId == id);
+			Item thisItem = _db.Items
+				.Include(item => item.Categories)
+					.ThenInclude(join => join.Category)
+				.FirstOrDefault(item => item.ItemId == id);
 			return View(thisItem);
 		}
 
@@ -61,6 +64,25 @@ namespace ToDoList.Controllers
 				_db.CategoryItem.Add(new CategoryItem() { CategoryId = categoryId, ItemId = item.ItemId });
 			}
 			_db.Entry(item).State = EntityState.Modified;
+			_db.SaveChanges();
+			return RedirectToAction("Index");
+		}
+
+		public ActionResult AddCategory(int id)
+		{
+			Item thisItem = _db.Items.FirstOrDefault(item => item.ItemId == id);
+			ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
+			return View(thisItem);
+		}
+
+		[HttpPost]
+		public ActionResult AddCategory(Item item, int categoryId)
+		{
+			bool duplicate = _db.CategoryItem.Any(catItem => catItem.CategoryId == categoryId && catItem.ItemId == item.ItemId);
+			if (categoryId != 0 && !duplicate)
+			{
+				_db.CategoryItem.Add(new CategoryItem() { CategoryId = categoryId, ItemId = item.ItemId });
+			}
 			_db.SaveChanges();
 			return RedirectToAction("Index");
 		}
@@ -85,25 +107,6 @@ namespace ToDoList.Controllers
 		{
 			CategoryItem joinEntry = _db.CategoryItem.FirstOrDefault(entry => entry.CategoryItemId == joinId);
 			_db.CategoryItem.Remove(joinEntry);
-			_db.SaveChanges();
-			return RedirectToAction("Index");
-		}
-
-		public ActionResult AddCategory(int id)
-		{
-			Item thisItem = _db.Items.FirstOrDefault(item => item.ItemId == id);
-			ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
-			return View(thisItem);
-		}
-
-		[HttpPost]
-		public ActionResult AddCategory(Item item, int categoryId)
-		{
-			bool duplicate = _db.CategoryItem.Any(catItem => catItem.CategoryId == categoryId && catItem.ItemId == item.ItemId);
-			if (categoryId != 0 && !duplicate)
-			{
-				_db.CategoryItem.Add(new CategoryItem() { CategoryId = categoryId, ItemId = item.ItemId });
-			}
 			_db.SaveChanges();
 			return RedirectToAction("Index");
 		}
