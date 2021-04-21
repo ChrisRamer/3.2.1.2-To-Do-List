@@ -72,10 +72,10 @@ namespace ToDoList.Controllers
 		}
 
 		[HttpPost, ActionName("Delete")]
-		public ActionResult DeleteConfirmed(int joinId)
+		public ActionResult DeleteConfirmed(int id)
 		{
-			CategoryItem joinEntry = _db.CategoryItem.FirstOrDefault(entry => entry.CategoryItemId == joinId);
-			_db.CategoryItem.Remove(joinEntry);
+			Item thisItem = _db.Items.FirstOrDefault(item => item.ItemId == id);
+			_db.Items.Remove(thisItem);
 			_db.SaveChanges();
 			return RedirectToAction("Index");
 		}
