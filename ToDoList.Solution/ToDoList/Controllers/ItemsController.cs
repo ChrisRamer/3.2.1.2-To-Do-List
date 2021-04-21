@@ -80,6 +80,15 @@ namespace ToDoList.Controllers
 			return RedirectToAction("Index");
 		}
 
+		[HttpPost]
+		public ActionResult DeleteCategory(int joinId)
+		{
+			CategoryItem joinEntry = _db.CategoryItem.FirstOrDefault(entry => entry.CategoryItemId == joinId);
+			_db.CategoryItem.Remove(joinEntry);
+			_db.SaveChanges();
+			return RedirectToAction("Index");
+		}
+
 		public ActionResult AddCategory(int id)
 		{
 			Item thisItem = _db.Items.FirstOrDefault(item => item.ItemId == id);
